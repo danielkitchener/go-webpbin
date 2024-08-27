@@ -7,7 +7,7 @@ import (
 	"image/png"
 	"io"
 
-	"github.com/nickalie/go-binwrapper"
+	"github.com/belphemur/go-binwrapper"
 )
 
 // DWebP wraps dwebp tool used for decompression of WebP files into PNG.
