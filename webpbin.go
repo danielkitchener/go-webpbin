@@ -59,7 +59,7 @@ func loadDefaultFromENV(binWrapper *binwrapper.BinWrapper) error {
 
 // DetectUnsupportedPlatforms detects platforms without prebuilt binaries (alpine and arm).
 // For this platforms libwebp tools should be built manually.
-// See https://github.com/nickalie/go-webpbin/blob/master/docker/Dockerfile and https://github.com/nickalie/go-webpbin/blob/master/docker/Dockerfile.arm for details
+// See https://github.com/belphemur/go-webpbin/blob/master/docker/Dockerfile and https://github.com/belphemur/go-webpbin/blob/master/docker/Dockerfile.arm for details
 func DetectUnsupportedPlatforms() {
 	if runtime.GOARCH == "arm" {
 		skipDownload = true
