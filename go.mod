@@ -1,4 +1,4 @@
-module github.com/belphemur/go-webpbin
+module github.com/belphemur/go-webpbin/v2
 
 go 1.23.0
 
