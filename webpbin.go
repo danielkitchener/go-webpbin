@@ -5,17 +5,25 @@ import (
 	"image"
 	"image/png"
 	"io"
-	"io/ioutil"
 	"os"
+	"path/filepath"
 	"runtime"
 	"strings"
 
-	"github.com/nickalie/go-binwrapper"
+	"github.com/belphemur/go-binwrapper"
 )
 
 var skipDownload bool
-var dest = ".bin/webp"
-var libwebpVersion = "1.2.0"
+var dest = DefaultWebPDir
+var libwebpVersion = "1.4.0"
+
+// DefaultWebPDir for downloaded browser. For unix is "$HOME/.cache/webp/bin",
+// for Windows it's "%APPDATA%\webp\bin"
+var DefaultWebPDir = filepath.Join(map[string]string{
+	"windows": filepath.Join(os.Getenv("APPDATA")),
+	"darwin":  filepath.Join(os.Getenv("HOME"), ".cache"),
+	"linux":   filepath.Join(os.Getenv("HOME"), ".cache"),
+}[runtime.GOOS], "webp", libwebpVersion, "bin")
 
 type OptionFunc func(binWrapper *binwrapper.BinWrapper) error
 
@@ -56,7 +64,7 @@ func DetectUnsupportedPlatforms() {
 	if runtime.GOARCH == "arm" {
 		skipDownload = true
 	} else if runtime.GOOS == "linux" {
-		output, err := ioutil.ReadFile("/etc/issue")
+		output, err := os.ReadFile("/etc/issue")
 
 		if err == nil && bytes.Contains(bytes.ToLower(output), []byte("alpine")) {
 			skipDownload = true
@@ -65,41 +73,6 @@ func DetectUnsupportedPlatforms() {
 }
 
 func createBinWrapper(optionFuncs ...OptionFunc) *binwrapper.BinWrapper {
-	macVersionMap := map[string]string{
-		"0.4.1":     "10.8-2",
-		"0.4.1-rc1": "10.8",
-		"0.4.2":     "10.8",
-		"0.4.2-rc2": "10.8",
-		"0.4.3":     "10.9",
-		"0.4.3-rc1": "10.9",
-		"0.4.4":     "10.9",
-		"0.4.4-rc2": "10.9",
-		"0.5.0":     "10.9",
-		"0.5.0-rc1": "10.9",
-		"0.5.1":     "10.9",
-		"0.5.1-rc5": "10.9",
-		"0.5.2":     "10.9",
-		"0.5.2-rc2": "10.9",
-		"0.6.0":     "10.12",
-		"0.6.0-rc2": "10.12",
-		"0.6.0-rc3": "10.12",
-		"0.6.1":     "10.12",
-		"0.6.1-rc2": "10.12",
-		"1.0.0":     "10.13",
-		"1.0.0-rc1": "10.13",
-		"1.0.0-rc2": "10.13",
-		"1.0.0-rc3": "10.13",
-		"1.0.1":     "10.13",
-		"1.0.1-rc2": "10.13",
-		"1.0.2":     "10.14",
-		"1.0.2-rc1": "10.14",
-		"1.0.3":     "10.14",
-		"1.0.3-rc1": "10.14",
-		"1.1.0":     "10.15",
-		"1.1.0-rc2": "10.15",
-		"1.2.0":     "10.15",
-		"1.2.0-rc3": "10.15",
-	}
 	base := "https://storage.googleapis.com/downloads.webmproject.org/releases/webp/"
 
 	b := binwrapper.NewBinWrapper().AutoExe()
@@ -113,8 +86,14 @@ func createBinWrapper(optionFuncs ...OptionFunc) *binwrapper.BinWrapper {
 	if !skipDownload {
 		b.Src(
 			binwrapper.NewSrc().
-				URL(base + "libwebp-" + libwebpVersion + "-mac-" + macVersionMap[libwebpVersion] + ".tar.gz").
-				Os("darwin")).
+				URL(base + "libwebp-" + libwebpVersion + "-mac-arm64.tar.gz").
+				Os("darwin").
+				Arch("arm64")).
+			Src(
+				binwrapper.NewSrc().
+					URL(base + "libwebp-" + libwebpVersion + "-mac-x86-64.tar.gz").
+					Os("darwin").
+					Arch("x64")).
 			Src(
 				binwrapper.NewSrc().
 					URL(base + "libwebp-" + libwebpVersion + "-linux-x86-32.tar.gz").
