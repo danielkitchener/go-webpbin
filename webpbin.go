@@ -115,6 +115,16 @@ func createBinWrapper(optionFuncs ...OptionFunc) *binwrapper.BinWrapper {
 					Arch("x64")).
 			Src(
 				binwrapper.NewSrc().
+					URL(base + "libwebp-" + libwebpVersion + "-linux-aarch64.tar.gz").
+					Os("linux").
+					Arch("arm64")).
+			Src(
+				binwrapper.NewSrc().
+					URL(base + "libwebp-" + libwebpVersion + "-linux-aarch64.tar.gz").
+					Os("linux").
+					Arch("aarch64")).
+			Src(
+				binwrapper.NewSrc().
 					URL(base + "libwebp-" + libwebpVersion + "-windows-x64.zip").
 					Os("win32").
 					Arch("x64")).
