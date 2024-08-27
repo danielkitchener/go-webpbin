@@ -14,16 +14,16 @@ import (
 )
 
 var skipDownload bool
-var dest = DefaultWebPDir
+var dest = GetPath()
 var libwebpVersion = "1.4.0"
 
-// DefaultWebPDir for downloaded browser. For unix is "$HOME/.cache/webp/bin",
-// for Windows it's "%APPDATA%\webp\bin"
-var DefaultWebPDir = filepath.Join(map[string]string{
-	"windows": filepath.Join(os.Getenv("APPDATA")),
-	"darwin":  filepath.Join(os.Getenv("HOME"), ".cache"),
-	"linux":   filepath.Join(os.Getenv("HOME"), ".cache"),
-}[runtime.GOOS], "webp", libwebpVersion, "bin")
+func GetPath() string {
+	return filepath.Join(map[string]string{
+		"windows": filepath.Join(os.Getenv("APPDATA")),
+		"darwin":  filepath.Join(os.Getenv("HOME"), ".cache"),
+		"linux":   filepath.Join(os.Getenv("HOME"), ".cache"),
+	}[runtime.GOOS], "webp", libwebpVersion, "bin")
+}
 
 type OptionFunc func(binWrapper *binwrapper.BinWrapper) error
 
@@ -39,6 +39,15 @@ func SetVendorPath(path string) OptionFunc {
 		dest = path
 		return nil
 	}
+}
+
+func SetLibVersion(version string) OptionFunc {
+	return func(binWrapper *binwrapper.BinWrapper) error {
+		libwebpVersion = version
+		dest = GetPath()
+		return nil
+	}
+
 }
 
 func loadDefaultFromENV(binWrapper *binwrapper.BinWrapper) error {
