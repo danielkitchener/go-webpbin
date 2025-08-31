@@ -1,14 +1,15 @@
 package webpbin
 
 import (
+	"fmt"
+	"image/jpeg"
+	"io"
 	"net/http"
 	"os"
-	"io"
-	"github.com/stretchr/testify/assert"
 	"testing"
-	"image/jpeg"
+
+	"github.com/stretchr/testify/assert"
 	"golang.org/x/image/webp"
-	"fmt"
 )
 
 func init() {
@@ -21,7 +22,18 @@ func downloadFile(url, target string) {
 	_, err := os.Stat(target)
 
 	if err != nil {
-		resp, err := http.Get(url)
+		client := &http.Client{
+			
+		}
+		req, err := http.NewRequest("GET", url, nil)
+		
+		if err != nil {
+			fmt.Printf("Error while creating request to download test image: %v\n", err)
+			panic(err)
+		}
+		req.Header.Add("User-Agent", "CWebp-Go-Binwrapper-Test/1.0")
+
+		resp, err := client.Do(req)
 
 		if err != nil {
 			fmt.Printf("Error while downloading test image: %v\n", err)
@@ -99,7 +111,7 @@ func TestVersionCWebP(t *testing.T) {
 	assert.Nil(t, err)
 
 	if _, ok := os.LookupEnv("DOCKER_ARM_TEST"); !ok {
-		assert.Equal(t, "1.2.0", r)
+		assert.Contains(t, r, "1.4.0")
 	}
 }
 
