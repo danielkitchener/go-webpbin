@@ -1,11 +1,12 @@
 package webpbin
 
 import (
-	"testing"
-	"github.com/stretchr/testify/assert"
-	"os"
-	"golang.org/x/image/webp"
 	"image/png"
+	"os"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"golang.org/x/image/webp"
 )
 
 func TestVersionDWebP(t *testing.T) {
@@ -13,7 +14,7 @@ func TestVersionDWebP(t *testing.T) {
 	r, err := c.Version()
 	assert.Nil(t, err)
 	if _, ok := os.LookupEnv("DOCKER_ARM_TEST"); !ok {
-		assert.Equal(t, "1.2.0", r)
+		assert.Contains(t, r, "1.4.0")
 	}
 }
 

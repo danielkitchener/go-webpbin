@@ -16,7 +16,7 @@ All env can be override with option functions.
 |-----|------|------------|
 |SKIP_DOWNLOAD|`false`|Download webp bin automatically. Since there is no precompiled file for alpine, **THE SKIP_DOWNLOAD MUST BE true AND ASSIGN A SOURCE FOR RUN.**|
 |VENDOR_PATH|`.bin/webp`|When there is no lib within and `SKIP_DOWNLAOD` is not `true`, it'll be downloaded.|
-|LIBWEBP_VERSION|`1.2.0`|The latest version for now. (2021/07/16)|
+|LIBWEBP_VERSION|`1.4.0`|The latest version for now. (2025/08/31)|
 
 
 ## Example of usage
